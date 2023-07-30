@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<hr class="my-4">
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th th:text="#{user.id}">학번</th>
+            <th th:text="#{user.name}">이름</th>
+            <th th:text="#{user.grade}">학년</th>
+            <th th:text="#{user.age}">나이</th>
+            <th th:text="#{user.tel}">전화번호</th>
+            <th th:text="#{user.email}">이메일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.grade}"></td>
+            <td th:text="${user.age}"></td>
+            <td th:text="${user.tel}"></td>
+            <td th:text="${user.email}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
