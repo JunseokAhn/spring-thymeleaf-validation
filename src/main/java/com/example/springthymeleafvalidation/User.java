@@ -17,6 +17,6 @@ public class User {
     private String email;
     private String tel;
     private String majorId;
-    private List<ClassType> classTypes;
+    private ClassType classType;
     private List<StudyType> studyTypes;
 }

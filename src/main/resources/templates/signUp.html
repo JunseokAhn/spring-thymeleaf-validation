@@ -57,7 +57,7 @@
     <div>
         <div>학습 형태</div>
         <div th:each="classType : ${classTypes}" class="form-check form-check-inline">
-            <input type="checkbox" th:field="*{classTypes}" th:value="${classType.name}" class="form-check-input">
+            <input type="checkbox" th:field="*{classType}" th:value="${classType.name}" class="form-check-input">
             <label th:for="${#ids.prev('classTypes')}"
                    th:text="${classType.name}" class="form-check-label">온라인</label>
         </div>
