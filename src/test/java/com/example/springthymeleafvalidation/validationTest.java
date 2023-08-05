@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class validationTest {
-    private SingleController controller = new SingleController(new UserValidator());
     private UserValidator userValidator = new UserValidator();
     private MessageSource messageSource = (MessageSource) new AnnotationConfigApplicationContext(AppConfig.class).getBean("messageSource");
     private User user;
