@@ -1,36 +1,53 @@
 package com.example.springthymeleafvalidation;
 
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 
+@Slf4j
 @Controller
+@RequiredArgsConstructor
 public class SingleController {
     private Map<String, User> userStore = new HashMap<>();
     private List<Major> majors = new ArrayList<>();
+    private final UserValidator userValidator;
 
-    @GetMapping("/signUp")
+    @InitBinder
+    public void init(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(userValidator);
+    }
+
+    @GetMapping("/user")
     public String signUp(Model model) {
         model.addAttribute("user", new User());
-        return "/signUp";
+        return "signUpForm";
     }
 
-    @PutMapping("/signUp")
-//    public String save(@ModelAttribute("user") User user){
-    public String save(User user) {
+    @PutMapping("/user")
+    public String save(@Validated User user, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()){
+            log.info("errors = {}", bindingResult);
+            return "signUpForm";
+        }
         userStore.put(user.getId(), user);
-        return "redirect:/students";
+        return "redirect:/users";
     }
 
 
-    @GetMapping("/students")
+    @GetMapping("/users")
     public String users(Model model) {
         model.addAttribute("users", userStore.values());
-        return "students";
+        return "userListView";
     }
 
     @ModelAttribute("majors")
