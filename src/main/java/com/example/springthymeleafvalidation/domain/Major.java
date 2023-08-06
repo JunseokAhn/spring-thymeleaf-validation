@@ -1,4 +1,4 @@
-package com.example.springthymeleafvalidation;
+package com.example.springthymeleafvalidation.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

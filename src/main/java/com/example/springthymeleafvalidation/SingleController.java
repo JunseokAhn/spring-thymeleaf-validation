@@ -1,11 +1,21 @@
 package com.example.springthymeleafvalidation;
 
+import com.example.springthymeleafvalidation.directvalidator.UserDirectValidator;
+import com.example.springthymeleafvalidation.directvalidator.UserEditDirectValidator;
+import com.example.springthymeleafvalidation.directvalidator.UserSaveDirectValidator;
+import com.example.springthymeleafvalidation.dto.UserEditDTO;
+import com.example.springthymeleafvalidation.dto.UserSaveDTO;
+import com.example.springthymeleafvalidation.domain.ClassType;
+import com.example.springthymeleafvalidation.domain.Major;
+import com.example.springthymeleafvalidation.domain.StudyType;
+import com.example.springthymeleafvalidation.domain.User;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -19,25 +29,33 @@ import java.util.*;
 public class SingleController {
     private Map<String, User> userStore = new HashMap<>();
     private List<Major> majors = new ArrayList<>();
-    private final UserValidator userValidator;
+    private final UserDirectValidator userDirectValidator;
+    private final UserSaveDirectValidator userSaveDirectValidator;
+    private final UserEditDirectValidator userEditDirectValidator;
+    private int userId= 1;
 
-    @InitBinder
-    public void init(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(userValidator);
-    }
+    //활성화하면 요청이 들어올 떄마다 자동으로 모든 Validator를 실행
+//    @InitBinder
+//    public void init(WebDataBinder webDataBinder) {
+//        webDataBinder.addValidators(userDirectValidator);
+//    }
 
     @GetMapping("/user/form")
     public String toUserForm(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserSaveDTO());
         return "userSaveForm";
     }
-    @PostMapping("/user/form")
-    public String saveUser(@Validated User user, BindingResult bindingResult) {
 
+    @PostMapping("/user/form")
+    public String saveUser(@Validated @ModelAttribute("user") UserSaveDTO userDTO, BindingResult bindingResult) {
+        userSaveDirectValidator.validate(userDTO, bindingResult);
         if(bindingResult.hasErrors()){
             log.info("errors = {}", bindingResult);
             return "userSaveForm";
         }
+
+        User user = userDTO.toEntity();
+        user.setId("user" + userId++);
         userStore.put(user.getId(), user);
         return "redirect:/user/list";
     }
@@ -49,15 +67,17 @@ public class SingleController {
 
     @GetMapping("/user/edit")
     public String toUserEdit(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserEditDTO());
         return "userEditForm";
     }
     @PutMapping("/user/edit")
-    public String updateUser(@Validated User user, BindingResult bindingResult) {
+    public String updateUser(@Validated @ModelAttribute("user") UserEditDTO userDTO, BindingResult bindingResult) {
+        userEditDirectValidator.validate(userDTO, bindingResult);
         if(bindingResult.hasErrors()){
             log.info("errors = {}", bindingResult);
             return "userEditForm";
         }
+        User user= userDTO.toEntity();
         userStore.put(user.getId(), user);
         return "redirect:/user/list";
     }

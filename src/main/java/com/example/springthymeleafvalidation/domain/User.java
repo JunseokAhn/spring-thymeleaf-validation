@@ -1,4 +1,4 @@
-package com.example.springthymeleafvalidation;
+package com.example.springthymeleafvalidation.domain;
 
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;

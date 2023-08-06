@@ -1,5 +1,6 @@
-package com.example.springthymeleafvalidation;
+package com.example.springthymeleafvalidation.directvalidator;
 
+import com.example.springthymeleafvalidation.domain.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -10,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class UserValidator implements Validator {
+public class UserDirectValidator implements Validator {
 
     private static final String EMAIL_REGEX =
             "^[a-zA-Z0-9_+&*-]+(?:\\." +
@@ -30,7 +31,7 @@ public class UserValidator implements Validator {
         User user = (User) target;
 
         //아이디가 없음
-        if (!StringUtils.hasText(user.getId())) {
+        if (user.getId()==null) {
             errors.rejectValue("id", "required");
         }
 
