@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .field-error {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+</style>
+<body>
+
+
+<form action="userListView.html" th:action th:object="${user}" method="post">
+    <div>
+        <label for="userId">학번</label>
+        <input type="text" id="userId"th:field="*{id}" class="form-control"  th:placeholder="#{enterTheId}" placeholder="학번을 입력하세요">
+    </div>
+    <div class="field-error" th:errors="*{id}"></div>
+    <div>
+        <label for="userName">이름</label>
+        <input type="text" id="userName" th:field="*{name}" class="form-control" th:placeholder="#{enterTheName}"  placeholder="이름을 입력하세요">
+    </div>
+    <div class="field-error" th:errors="*{name}"></div>
+    <div>
+        <label for="userAge">나이</label>
+        <input type="text" id="userAge" th:field="*{age}" class="form-control" th:placeholder="#{enterTheAge}"  placeholder="나이를 입력하세요">
+    </div>
+    <div class="field-error" th:errors="*{age}"></div>
+    <div>
+        <label for="email">이메일</label>
+        <input type="text" id="email" th:field="*{email}" class="form-control" th:placeholder="#{enterTheEmail}"  placeholder="이메일을 입력하세요">
+    </div>
+    <div class="field-error" th:errors="*{email}"></div>
+    <div>
+        <label for="email">전화</label>
+        <input type="text" id="tel" th:field="*{tel}" class="form-control" th:placeholder="#{enterTheTel}"  placeholder="전화번호를 입력하세요">
+    </div>
+    <div class="field-error" th:errors="*{tel}"></div>
+    <hr class="my-4">
+    <!-- SELECT -->
+    <div>
+        <div>학과 선택</div>
+        <select th:field="*{majorId}" class="form-select">
+            <option value="">==학과 선택==</option>
+            <option th:each="major : ${majors}" th:value="${major.id}"
+                    th:text="${major.name}">FAST
+            </option>
+        </select>
+    </div>
+    <div class="field-error" th:errors="*{majorId}"></div>
+    <!-- radio button -->
+    <hr class="my-4">
+    <div>
+        <div>주야 구분</div>
+        <div th:each="studyType : ${studyTypes}" class="form-check form-check-inline">
+            <input type="radio" th:field="*{studyTypes}" th:value="${studyType.name}" class="form-check-input">
+            <label th:for="${#ids.prev('studyTypes')}" th:text="${studyType.name}" class="form-check-label">
+                BOOK
+            </label>
+        </div>
+    </div>
+    <div class="field-error" th:errors="*{studyTypes}"></div>
+    <!-- multi checkbox -->
+    <hr class="my-4">
+    <div>
+        <div>학습 형태</div>
+        <div th:each="classType : ${classTypes}" class="form-check form-check-inline">
+            <input type="checkbox" th:field="*{classType}" th:value="${classType.name}" class="form-check-input">
+            <label th:for="${#ids.prev('classType')}"
+                   th:text="${classType.name}" class="form-check-label">온라인</label>
+        </div>
+    </div>
+    <div class="field-error" th:errors="*{classType}"></div>
+    <hr class="my-4">
+
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-primary btn-lg" type="submit">등록</button>
+        </div>
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    onclick="location.href='/userListView.html'"
+                    th:onclick="|location.href='@{/user/list}'|"
+                    type="button">목록
+            </button>
+        </div>
+    </div>
+
+</form>
+
+</body>
+</html>

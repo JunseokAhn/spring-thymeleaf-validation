@@ -8,15 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Slf4j
@@ -32,29 +26,42 @@ public class SingleController {
         webDataBinder.addValidators(userValidator);
     }
 
-    @GetMapping("/user")
-    public String signUp(Model model) {
+    @GetMapping("/user/form")
+    public String toUserForm(Model model) {
         model.addAttribute("user", new User());
-        return "signUpForm";
+        return "userSaveForm";
     }
-
-    @PutMapping("/user")
-    public String save(@Validated User user, BindingResult bindingResult) {
+    @PostMapping("/user/form")
+    public String saveUser(@Validated User user, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()){
             log.info("errors = {}", bindingResult);
-            return "signUpForm";
+            return "userSaveForm";
         }
         userStore.put(user.getId(), user);
-        return "redirect:/users";
+        return "redirect:/user/list";
     }
-
-
-    @GetMapping("/users")
-    public String users(Model model) {
+    @GetMapping("/user/list")
+    public String toUserListView(Model model) {
         model.addAttribute("users", userStore.values());
         return "userListView";
     }
+
+    @GetMapping("/user/edit")
+    public String toUserEdit(Model model) {
+        model.addAttribute("user", new User());
+        return "userEditForm";
+    }
+    @PutMapping("/user/edit")
+    public String updateUser(@Validated User user, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            log.info("errors = {}", bindingResult);
+            return "userEditForm";
+        }
+        userStore.put(user.getId(), user);
+        return "redirect:/user/list";
+    }
+
 
     @ModelAttribute("majors")
     public List<Major> lectures() {

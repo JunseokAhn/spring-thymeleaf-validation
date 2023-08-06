@@ -5,7 +5,8 @@
     <title>Title</title>
 </head>
 <body>
-    <a href="signUpForm.html" th:href="@{/user}" th:text="#{signUp}">등록</a>
-    <a href="userListView.html" th:href="@{/users}" th:text="#{students}">목록</a>
+    <a href="/userSaveForm.html" th:href="@{/user/form}" th:text="#{signUp}">등록</a>
+    <a href="/userEditForm.html" th:href="@{/user/edit}" th:text="#{edit}">수정</a>
+    <a href="/userListView.html" th:href="@{/user/list}" th:text="#{listView}">목록</a>
 </body>
 </html>
