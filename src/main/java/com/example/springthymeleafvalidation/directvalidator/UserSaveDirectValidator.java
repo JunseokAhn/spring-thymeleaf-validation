@@ -48,7 +48,7 @@ public class UserSaveDirectValidator implements Validator {
 
         //19세 미만은 입학불가
         if (user.getAge() != null && user.getAge() < 19) {
-            errors.rejectValue("age", "min", new Integer[]{20}, null);
+            errors.rejectValue("age", "min", new Integer[]{19}, null);
         }
 
         //주야구분을 입력하지 않았음
