@@ -31,16 +31,17 @@ public class UserSaveDirectValidator implements Validator {
     public void validate(Object target, Errors errors) {
         UserSaveDTO user = (UserSaveDTO) target;
 
+        /** save폼에서 아이디를 삭제함에따라 관련 검증 삭제
         //아이디가 없음
-//        if (user.getId()==null) {
-//            errors.rejectValue("id", "required");
-//        }
+        if (user.getId()==null) {
+            errors.rejectValue("id", "required");
+        }
 
         //아이디가 영문과 숫자로 이뤄져있지 않음
-//        if (user.getId() != null && !validateFromRegex(user.getId(), ID_REGEX)) {
-//            errors.rejectValue("id", "type");
-//        }
-
+        if (user.getId() != null && !validateFromRegex(user.getId(), ID_REGEX)) {
+            errors.rejectValue("id", "type");
+        }
+         */
         //학과를 선택하지않았음
         if (!StringUtils.hasText(user.getMajorId())) {
             errors.rejectValue("majorId", "required");

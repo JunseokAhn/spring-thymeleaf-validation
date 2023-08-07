@@ -29,7 +29,8 @@ import java.util.*;
 public class SingleController {
     private Map<String, User> userStore = new HashMap<>();
     private List<Major> majors = new ArrayList<>();
-    private final UserDirectValidator userDirectValidator;
+    //화면별 유효성검증 분리에 따라 제거
+    //private final UserDirectValidator userDirectValidator;
     private final UserSaveDirectValidator userSaveDirectValidator;
     private final UserEditDirectValidator userEditDirectValidator;
     private int userId= 1;
