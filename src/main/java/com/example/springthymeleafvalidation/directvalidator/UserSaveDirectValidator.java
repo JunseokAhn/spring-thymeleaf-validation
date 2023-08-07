@@ -11,16 +11,11 @@ import org.springframework.validation.Validator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.springthymeleafvalidation.directvalidator.REGEX.EMAIL_REGEX;
+import static com.example.springthymeleafvalidation.directvalidator.REGEX.TEL_REGEX;
+
 @Component
 public class UserSaveDirectValidator implements Validator {
-
-    private static final String EMAIL_REGEX =
-            "^[a-zA-Z0-9_+&*-]+(?:\\." +
-                    "[a-zA-Z0-9_+&*-]+)*@" +
-                    "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                    "A-Z]{2,7}$";
-    private static final String TEL_REGEX = "\\d{2,3}-\\d{3,4}-\\d{4}";
-//    private static final String ID_REGEX = "^[a-zA-Z0-9]*$";
 
     @Override
     public boolean supports(Class<?> clazz) {

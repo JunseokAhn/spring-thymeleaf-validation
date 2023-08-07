@@ -1,26 +1,27 @@
 package com.example.springthymeleafvalidation;
 
-import com.example.springthymeleafvalidation.directvalidator.UserDirectValidator;
-import com.example.springthymeleafvalidation.directvalidator.UserEditDirectValidator;
-import com.example.springthymeleafvalidation.directvalidator.UserSaveDirectValidator;
-import com.example.springthymeleafvalidation.dto.UserEditDTO;
-import com.example.springthymeleafvalidation.dto.UserSaveDTO;
 import com.example.springthymeleafvalidation.domain.ClassType;
 import com.example.springthymeleafvalidation.domain.Major;
 import com.example.springthymeleafvalidation.domain.StudyType;
 import com.example.springthymeleafvalidation.domain.User;
+import com.example.springthymeleafvalidation.dto.UserEditDTO;
+import com.example.springthymeleafvalidation.dto.UserSaveDTO;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Slf4j
@@ -31,8 +32,10 @@ public class SingleController {
     private List<Major> majors = new ArrayList<>();
     //화면별 유효성검증 분리에 따라 제거
     //private final UserDirectValidator userDirectValidator;
-    private final UserSaveDirectValidator userSaveDirectValidator;
-    private final UserEditDirectValidator userEditDirectValidator;
+    
+    //Bean Validator 도입에 따라 제거
+    //private final UserSaveDirectValidator userSaveDirectValidator;
+    //private final UserEditDirectValidator userEditDirectValidator;
     private int userId= 1;
 
     //활성화하면 요청이 들어올 떄마다 자동으로 모든 Validator를 실행
@@ -49,7 +52,9 @@ public class SingleController {
 
     @PostMapping("/user/form")
     public String saveUser(@Validated @ModelAttribute("user") UserSaveDTO userDTO, BindingResult bindingResult) {
-        userSaveDirectValidator.validate(userDTO, bindingResult);
+
+        //Bean Validator 사용에 따라 제거
+        //userSaveDirectValidator.validate(userDTO, bindingResult);
         if(bindingResult.hasErrors()){
             log.info("errors = {}", bindingResult);
             return "userSaveForm";
@@ -73,7 +78,9 @@ public class SingleController {
     }
     @PutMapping("/user/edit")
     public String updateUser(@Validated @ModelAttribute("user") UserEditDTO userDTO, BindingResult bindingResult) {
-        userEditDirectValidator.validate(userDTO, bindingResult);
+
+        //Bean Validator 사용에 따라 제거
+        //userEditDirectValidator.validate(userDTO, bindingResult);
         if(bindingResult.hasErrors()){
             log.info("errors = {}", bindingResult);
             return "userEditForm";
