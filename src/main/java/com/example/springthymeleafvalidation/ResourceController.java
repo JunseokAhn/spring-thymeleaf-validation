@@ -6,8 +6,9 @@ import com.example.springthymeleafvalidation.domain.StudyType;
 import com.example.springthymeleafvalidation.domain.User;
 import com.example.springthymeleafvalidation.dto.UserEditDTO;
 import com.example.springthymeleafvalidation.dto.UserSaveDTO;
-import jakarta.annotation.PostConstruct;
+import com.example.springthymeleafvalidation.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,25 +19,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class SingleController {
-    private Map<String, User> userStore = new HashMap<>();
-    private List<Major> majors = new ArrayList<>();
+public class ResourceController {
+
+    private final SingleRepository repository;
     //화면별 유효성검증 분리에 따라 제거
     //private final UserDirectValidator userDirectValidator;
-    
+
     //Bean Validator 도입에 따라 제거
     //private final UserSaveDirectValidator userSaveDirectValidator;
     //private final UserEditDirectValidator userEditDirectValidator;
-    private int userId= 1;
 
     //활성화하면 요청이 들어올 떄마다 자동으로 모든 Validator를 실행
 //    @InitBinder
@@ -50,6 +47,7 @@ public class SingleController {
         return "userSaveForm";
     }
 
+    //Bean Validator에 의해 BindingResult에 Error가 생성되고, 페이지에 검증오류값을 전달 ( status : 200 )
     @PostMapping("/user/form")
     public String saveUser(@Validated @ModelAttribute("user") UserSaveDTO userDTO, BindingResult bindingResult) {
 
@@ -59,15 +57,12 @@ public class SingleController {
             log.info("errors = {}", bindingResult);
             return "userSaveForm";
         }
-
-        User user = userDTO.toEntity();
-        user.setId("user" + userId++);
-        userStore.put(user.getId(), user);
+        User user = repository.save(userDTO);
         return "redirect:/user/list";
     }
     @GetMapping("/user/list")
     public String toUserListView(Model model) {
-        model.addAttribute("users", userStore.values());
+        model.addAttribute("users", repository.getUsers());
         return "userListView";
     }
 
@@ -76,6 +71,7 @@ public class SingleController {
         model.addAttribute("user", new UserEditDTO());
         return "userEditForm";
     }
+    //Bean Validator에 의해 BindingResult에 Error가 생성되고, 페이지에 검증오류값을 전달 ( status : 200 )
     @PutMapping("/user/edit")
     public String updateUser(@Validated @ModelAttribute("user") UserEditDTO userDTO, BindingResult bindingResult) {
 
@@ -85,15 +81,28 @@ public class SingleController {
             log.info("errors = {}", bindingResult);
             return "userEditForm";
         }
-        User user= userDTO.toEntity();
-        userStore.put(user.getId(), user);
+        repository.overWrite(userDTO);
         return "redirect:/user/list";
+    }
+
+    //BasicErrorController에 의해 4xx.html페이지로 리다이렉트 ( status : 404 )
+    @GetMapping("/error/notfound")
+    public String toNotFoundPage(){
+        return "redirect:/notfoundpage";
+    }
+
+
+    //BasicErrorController에 의해 5xx.html페이지로 리다이렉트 ( status : 500 )
+    @SneakyThrows
+    @GetMapping("/error/exception")
+    public void throwException(){
+        throw new CustomException("throw new CustomException");
     }
 
 
     @ModelAttribute("majors")
     public List<Major> lectures() {
-        return majors;
+        return repository.getMajors();
     }
 
     @ModelAttribute("classTypes")
@@ -104,15 +113,6 @@ public class SingleController {
     @ModelAttribute("studyTypes")
     public StudyType[] studyTypes() {
         return StudyType.values();
-    }
-
-    @PostConstruct
-    public void init() {
-        majors.add(new Major("1", "강의1", "교수1"));
-        majors.add(new Major("2", "강의2", "교수2"));
-        majors.add(new Major("3", "강의3", "교수3"));
-        majors.add(new Major("4", "강의4", "교수4"));
-        majors.add(new Major("5", "강의5", "교수5"));
     }
 
 }

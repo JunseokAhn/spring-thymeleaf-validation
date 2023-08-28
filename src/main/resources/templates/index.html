@@ -8,5 +8,7 @@
     <a href="/userSaveForm.html" th:href="@{/user/form}" th:text="#{signUp}">등록</a>
     <a href="/userEditForm.html" th:href="@{/user/edit}" th:text="#{edit}">수정</a>
     <a href="/userListView.html" th:href="@{/user/list}" th:text="#{listView}">목록</a>
+    <a href="/" th:href="@{/error/notfound}" th:text="#{error404}">404에러 호출</a>
+    <a href="/" th:href="@{/error/exception}" th:text="#{error500}">500에러 호출</a>
 </body>
 </html>
