@@ -2,21 +2,18 @@ package com.example.springthymeleafvalidation;
 
 import com.example.springthymeleafvalidation.domain.Major;
 import com.example.springthymeleafvalidation.domain.User;
-import com.example.springthymeleafvalidation.dto.UserEditDTO;
-import com.example.springthymeleafvalidation.dto.UserSaveDTO;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Repository
 @Data
 public class SingleRepository {
     private Map<String, User> userStore = new HashMap<>();
     private List<Major> majors = new ArrayList<>();
-    private int userId= 1;
+    private int userId = 1;
 
     @PostConstruct
     public void init() {
@@ -27,23 +24,48 @@ public class SingleRepository {
         majors.add(new Major("5", "강의5", "교수5"));
     }
 
-    public User save(UserSaveDTO userDTO) {
-        User user = userDTO.toEntity();
+    public User save(User user) {
         user.setId("user" + userId++);
         userStore.put(user.getId(), user);
-        return user;
+        return userStore.get(user.getId()).clone();
     }
 
-    public List<Major> getMajors(){
+    public List<Major> getMajors() {
         return new ArrayList<>(majors);
     }
 
-    public List<User> getUsers(){
+    public User find(String userId) {
+        User user = userStore.get(userId);
+        if (user == null) {
+            throw new NoSuchElementException("id not found");
+        }
+        return user.clone();
+    }
+
+    public User findNoException(String userId) {
+        User user = userStore.get(userId);
+        if (user == null) {
+            return null;
+        }
+        return user.clone();
+    }
+
+    public List<User> findAll() {
         return new ArrayList<>(userStore.values());
     }
 
-    public void overWrite(UserEditDTO userDTO) {
-        User user= userDTO.toEntity();
+    public User put(User user) {
         userStore.put(user.getId(), user);
+        return find(user.getId()).clone();
     }
+
+    public User remove(String userId) {
+        User user = find(userId);
+        if (user == null) {
+            throw new NoSuchElementException("id not found");
+        }
+        userStore.remove(userId);
+        return user.clone();
+    }
+
 }

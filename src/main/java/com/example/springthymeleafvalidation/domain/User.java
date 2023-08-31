@@ -22,4 +22,8 @@ public class User {
     private String majorId;
     private ClassType classType;
     private List<StudyType> studyTypes;
+
+    public User clone(){
+        return new User(id, grade, age, name, email, tel, majorId, classType, studyTypes);
+    }
 }

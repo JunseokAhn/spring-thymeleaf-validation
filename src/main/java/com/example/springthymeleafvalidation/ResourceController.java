@@ -57,12 +57,12 @@ public class ResourceController {
             log.info("errors = {}", bindingResult);
             return "userSaveForm";
         }
-        User user = repository.save(userDTO);
+        repository.save(userDTO.toEntity());
         return "redirect:/user/list";
     }
     @GetMapping("/user/list")
     public String toUserListView(Model model) {
-        model.addAttribute("users", repository.getUsers());
+        model.addAttribute("users", repository.findAll());
         return "userListView";
     }
 
@@ -81,7 +81,7 @@ public class ResourceController {
             log.info("errors = {}", bindingResult);
             return "userEditForm";
         }
-        repository.overWrite(userDTO);
+        repository.put(userDTO.toEntity());
         return "redirect:/user/list";
     }
 
