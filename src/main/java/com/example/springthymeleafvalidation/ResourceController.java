@@ -3,7 +3,6 @@ package com.example.springthymeleafvalidation;
 import com.example.springthymeleafvalidation.domain.ClassType;
 import com.example.springthymeleafvalidation.domain.Major;
 import com.example.springthymeleafvalidation.domain.StudyType;
-import com.example.springthymeleafvalidation.domain.User;
 import com.example.springthymeleafvalidation.dto.UserEditDTO;
 import com.example.springthymeleafvalidation.dto.UserSaveDTO;
 import com.example.springthymeleafvalidation.exception.CustomException;
@@ -18,8 +17,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 
 @Slf4j
@@ -95,10 +97,19 @@ public class ResourceController {
     //BasicErrorController에 의해 5xx.html페이지로 리다이렉트 ( status : 500 )
     @SneakyThrows
     @GetMapping("/error/exception")
-    public void throwException(){
+    public void throwInternalServerErrorException(){
         throw new CustomException("throw new CustomException");
     }
+    @SneakyThrows
+    @GetMapping("/error/exception2")
+    public void throwInternalServerErrorException2(){
+        throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "동적으로 에러코드 조작가능", new InternalError());
+    }
 
+    @SneakyThrows
+    @PostMapping("/error/405")
+    public void throwMethodNotAllowedException(){
+    }
 
     @ModelAttribute("majors")
     public List<Major> lectures() {
