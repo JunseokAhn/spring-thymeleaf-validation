@@ -68,7 +68,7 @@ public class ApiController {
             return new ResponseEntity(new ResponseDTO(EnumStatus.BAD_REQUEST, getErrors(bindingResult)), BAD_REQUEST);
         }
         //기존 생성된 유저가 없으면, 생성하고 201코드 반환
-        if (repository.findNoException(userDto.getId()) == null) {
+        if (repository.isEmpty(userDto.getId())) {
             User user = repository.save(userDto.toEntity());
             return new ResponseEntity(new ResponseDTO(EnumStatus.NO_CONTENT, user), CREATED);
         }

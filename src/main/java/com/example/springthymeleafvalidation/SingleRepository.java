@@ -34,20 +34,14 @@ public class SingleRepository {
         return new ArrayList<>(majors);
     }
 
+    // user 못찾으면 Exception, 찾으면 새 인스턴스 반환
     public User find(String userId) {
-        User user = userStore.get(userId);
-        if (user == null) {
-            throw new NoSuchElementException("id not found");
-        }
-        return user.clone();
+        return Optional.ofNullable(userStore.get(userId))
+                .orElseThrow(() -> new NoSuchElementException("user not found"))
+                .clone();
     }
-
-    public User findNoException(String userId) {
-        User user = userStore.get(userId);
-        if (user == null) {
-            return null;
-        }
-        return user.clone();
+    public boolean isEmpty(String userId){
+        return Optional.ofNullable(userStore.get(userId)).isEmpty();
     }
 
     public List<User> findAll() {
@@ -59,13 +53,13 @@ public class SingleRepository {
         return find(user.getId()).clone();
     }
 
+    // user 못찾으면 exception, 찾으면 제거하고 새 인스턴스 반환
     public User remove(String userId) {
-        User user = find(userId);
-        if (user == null) {
-            throw new NoSuchElementException("id not found");
-        }
+        User user = Optional.ofNullable(find(userId))
+                .orElseThrow(() -> new NoSuchElementException("user not found"))
+                .clone();
         userStore.remove(userId);
-        return user.clone();
+        return user;
     }
 
 }
